@@ -44,6 +44,10 @@ def cart(request):
 		cartItems = order['get_cart_items']
 
 
+        for i in cart:
+        cartItems += cart[i]['quantity']
+
+
 
 
 def checkout(request):
@@ -96,6 +100,6 @@ def processOrder(request):
     order.transaction_id = transaction_id
 
     else:
-    print('User is not logged in..')
-return JsonResponse('Payment complete!', safe=False)
+        print('User is not logged in..')
+    return JsonResponse('Payment complete!', safe=False)
 
