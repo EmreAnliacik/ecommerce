@@ -37,3 +37,6 @@ def cookieCart(request):
 			pass
 
 	return {'cartItems':cartItems ,'order':order, 'items':items}
+
+def cartData(request):
+	return {}
