@@ -73,10 +73,20 @@
     if (shipping == 'False'){
         document.getElementById('shipping-info').innerHTML = ''
     }
+    if (user != 'AnonymousUser'){
+        document.getElementById('user-info').innerHTML = ''
+    }
+    if (shipping == 'False' && user != 'AnonymousUser'){
+        document.getElementById('form-wrapper').classList.add("hidden");
+        document.getElementById('payment-info').classList.remove("hidden");
+    }
+
+
+
     var form = document.getELementById( 'form')
-form. addEventListener( 'submit', function(e){
-e. preventDefault( )
-console.log('Form Submitted...')
+    form. addEventListener( 'submit', function(e){
+    e. preventDefault( )
+    console.log('Form Submitted...')
     document.getElementById('form-button').classList.add('hidden')
     document.getElementById('payment-info').classList.remove("hidden")
 ｝)
