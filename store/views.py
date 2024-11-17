@@ -1,6 +1,6 @@
 from itertools import product
 from django.http import JsonResponse
-
+import json
 
 from django.shortcuts import render
 from .models import *
@@ -39,4 +39,10 @@ def checkout(request):
     return render(request, "store/checkout.html", context)
 
 def updateItem(request):
+    data = json.loads(request.data)
+    productId = data['productId']
+    action = data['action']
+
+    print('Action:', action)
+    print('productId:', productId)
     return JsonResponse('Item was added', safe=False)
