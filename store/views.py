@@ -38,6 +38,9 @@ def cart(request):
         cartItems = order.get_cart_items
     else:
         cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
 
 
     context = {'items': items, 'order': order, 'cartItems': cartItems}
