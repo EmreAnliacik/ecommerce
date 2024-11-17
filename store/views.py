@@ -96,9 +96,22 @@ def processOrder(request):
     if request.user.is_authenticated:
         customer = request.user.customer
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
-    total = float(data['from']['total'])
+    total = float(data['form']['total'])
     order.transaction_id = transaction_id
 
+    if total == order.get_cart_total:
+        order.complete = True
+        order.save()
+
+        if order.shipping == True:
+            ShippingAddress.objects.create(
+                customer=customer,
+                order=order,
+                adress=data['shipping']['address'],
+                adress=data['shipping']['city'],
+                adress=data['shipping']['state'],
+                adress=data['shipping']['zipcode'],
+            )
     else:
         print('User is not logged in..')
     return JsonResponse('Payment complete!', safe=False)
