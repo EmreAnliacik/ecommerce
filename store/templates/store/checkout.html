@@ -141,7 +141,12 @@ body: JSON. stringify({'form' userFormData, 'shipping' :shippingInfo}
     .then((data) => {
 console. Log('Success:', data);
 alert( 'Transaction completed');
+
+cart = {}
+document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
 window.location.href = "{% url 'store' %}"
+
 
     }
 }
