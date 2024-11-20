@@ -1,0 +1,39 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/login.css' %}">
+        <title>Login</title>
+    </head>
+    <body>
+    <div class="container1">
+        <div class="login-container1">
+            <h1 class="logo1">Ecom</h1>
+            <ul class="tabs1">
+                <li class="tab1 active1">Login</li>
+                <li class="tab1">Sign up</li>
+            </ul>
+            <form method="post" class="login-form1">
+                {% csrf_token %}
+                <input type="email" name="email" class="form-control1" placeholder="E-mail" required>
+                <input type="password" name="password" class="form-control1" placeholder="Password" required>
+                <a href="#" class="forgot-password1">i forgot my password</a>
+                <button type="submit" class="btn1 btn-primary1">Continue</button>
+            </form>
+            <div class="social-login1">
+                <p>Log in with your google</p>
+                <div class="social-icons1">
+                    <a href="#"><img src="{% static 'images/google-logo.png' %}" alt="Google"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+
+{% endblock content %}
