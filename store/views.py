@@ -3,8 +3,9 @@ import json
 import datetime
 from .models import *
 from .utils import cookieCart, cartData, guestOrder
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from .forms import UserLoginForm  # Ensure this import is present
 
 
 # Create your views here.
@@ -18,7 +19,6 @@ def store(request):
     else:
         cookieData = cookieCart(request)
         cartItems = cookieData['cartItems']
-
 
     products = Product.objects.all()
     context = {"products": products, "cartItems": cartItems}
@@ -36,7 +36,6 @@ def cart(request):
         cartItems = cookieData['cartItems']
         order = cookieData['order']
         items = cookieData['items']
-
 
     context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'store/cart.html', context)
@@ -104,12 +103,30 @@ def processOrder(request):
 
     if order.shipping == True:
         ShippingAddress.objects.create(
-        customer=customer,
-        order=order,
-        adress=data['shipping']['address'],
-        city=data['shipping']['city'],
-        state=data['shipping']['state'],
-        zipcode=data['shipping']['zipcode'],
-            )
+            customer=customer,
+            order=order,
+            adress=data['shipping']['address'],
+            city=data['shipping']['city'],
+            state=data['shipping']['state'],
+            zipcode=data['shipping']['zipcode'],
+        )
 
     return JsonResponse('Payment complete!', safe=False)
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = UserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('store')  # Redirect after successful login
+            else:
+                form.add_error(None, 'Kullanıcı adı veya şifre hatalı.')
+    else:
+        form = UserLoginForm()
+
+    return render(request, 'store/login.html', {'form': form})  # Adjust path if necessary
