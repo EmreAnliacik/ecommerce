@@ -9,5 +9,5 @@ urlpatterns = [
     path('process_order/', views.processOrder, name="process_order"),
     path('login/', views.login_view, name='login'),
     path('word-guess/', views.word_guess_game, name='word_guess_game'),
-
+    path('logout/', views.logout_view, name='logout'),  # Logout URL'si
 ]
