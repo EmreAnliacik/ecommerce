@@ -6,6 +6,8 @@ from .utils import cookieCart, cartData, guestOrder
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import UserLoginForm  # Ensure this import is present
+from django.shortcuts import render
+import random
 
 
 # Create your views here.
@@ -125,15 +127,12 @@ def login_view(request):
                 login(request, user)
                 return redirect('store')  # Redirect after successful login
             else:
-                form.add_error(None, 'Kullanıcı adı veya şifre hatalı.')
+                form.add_error(None, 'User Id or Password is incorrect')
     else:
         form = UserLoginForm()
 
     return render(request, 'store/login.html', {'form': form})  # Adjust path if necessary
 
-
-from django.shortcuts import render
-import random
 
 # Kelime listesi
 WORDS = ["python", "django", "development", "programming", "project", "template", "variable"]

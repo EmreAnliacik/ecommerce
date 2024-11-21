@@ -115,6 +115,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-link {
+    font-size: 20px; /* Font size'ı büyütüyoruz */
     font-weight: bold;
     font-family: Arial, serif;
     margin-left: 10px;
@@ -124,6 +125,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-link:hover {
+    font-size: 20px; /* Font size'ı büyütüyoruz */
     color: #555555; /* Hover durumu için renk */
     text-shadow: 2px 2px 2px #555555;
 }
@@ -133,7 +135,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .myButton {
-    box-shadow: 1px 1px 5px 1px #fff6af;
+    box-shadow: 0px 1px 1px 0px #fff6af;
     background: #ffec64 linear-gradient(to bottom, #ffec64 5%, #ff6a00 100%);
     border-radius: 16px;
     border: 1px solid #ffaa22;
