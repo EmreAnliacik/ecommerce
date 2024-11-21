@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/game.css' %}">
+    <title>Kelime Tahmin Oyunu</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .word { font-size: 24px; letter-spacing: 5px; }
+        .message { margin: 20px 0; color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Kelime Tahmin Oyunu</h1>
+    <p>6 yanlış hak ile kelimeyi tahmin edin!</p>
+    <p class="word">
+        {{ correct_guesses|join:" " }}
+    </p>
+    <p>Tahmin sayısı: {{ attempts }}</p>
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
+    {% if '_' in correct_guesses and attempts < 6 %}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="guess" maxlength="1" required placeholder="Bir harf tahmin edin">
+            <button type="submit">Tahmin Et</button>
+        </form>
+    {% else %}
+        <a href="{% url 'word_guess_game' %}">Yeni Oyun Başlat</a>
+    {% endif %}
+</body>
+</html>
