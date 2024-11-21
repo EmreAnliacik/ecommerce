@@ -19,11 +19,17 @@
                 <li class="tab1">Sign up</li>
             </ul>
             <form method="post" class="login-form1">
+
+
+                {% if form.non_field_errors %}
+                    <div class="error">{{ form.non_field_errors }}</div>
+                {% endif %}
                 {% csrf_token %}
                 <input type="email" name="email" class="form-control1" placeholder="E-mail" required>
                 <input type="password" name="password" class="form-control1" placeholder="Password" required>
-                <a href="#" class="forgot-password1">i forgot my password</a>
                 <button type="submit" class="btn1 btn-primary1">Continue</button>
+                <a href="#" class="forgot-password1">i forgot my password</a>
+
             </form>
             <div class="social-login1">
                 <p>Log in with your google</p>

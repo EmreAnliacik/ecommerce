@@ -117,22 +117,21 @@ def processOrder(request):
 
 
 def login_view(request):
-    if request.user.is_authenticated:
-        return redirect('store')  # Eğer kullanıcı zaten giriş yaptıysa direkt store'a yönlendir
-
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=email, password=password)
+
             if user is not None:
                 login(request, user)
-                return redirect('store')  # Giriş başarılıysa 'store' sayfasına yönlendir
+                return redirect('store')  # Redirect to a success page
             else:
-                form.add_error(None, 'User ID or Password is incorrect')  # Hata mesajı
+                form.add_error(None, 'Invalid email or password')
         else:
             form.add_error(None, 'Form is not valid')
+
     else:
         form = UserLoginForm()
 
