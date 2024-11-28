@@ -4,17 +4,20 @@ import datetime
 from .models import *
 from .utils import cookieCart, cartData, guestOrder
 import random
+from django.contrib.auth import authenticate, login, logout
+from .forms import UserSignupForm
+from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
 from .forms import UserLoginForm
-from django.contrib.auth import logout
+from .models import Customer  # Customer modelini ekleyin
 
 
 # Create your views here.
 
 def store(request):
     if request.user.is_authenticated:
-        customer = request.user.customer
+        # Kullanıcıya bağlı Customer nesnesini al veya oluştur
+        customer, created = Customer.objects.get_or_create(user=request.user)
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
@@ -29,7 +32,8 @@ def store(request):
 
 def cart(request):
     if request.user.is_authenticated:
-        customer = request.user.customer
+        # Kullanıcıya bağlı Customer nesnesini al veya oluştur
+        customer, created = Customer.objects.get_or_create(user=request.user)
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
@@ -45,7 +49,8 @@ def cart(request):
 
 def checkout(request):
     if request.user.is_authenticated:
-        customer = request.user.customer
+        # Kullanıcıya bağlı Customer nesnesini al veya oluştur
+        customer, created = Customer.objects.get_or_create(user=request.user)
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
@@ -116,33 +121,6 @@ def processOrder(request):
     return JsonResponse('Payment complete!', safe=False)
 
 
-def login_view(request):
-    if request.method == 'POST':
-        form = UserLoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=email, password=password)
-
-            if user is not None:
-                login(request, user)
-                return redirect('store')  # Redirect to a success page
-            else:
-                form.add_error(None, 'Invalid email or password')
-        else:
-            form.add_error(None, 'Form is not valid')
-
-    else:
-        form = UserLoginForm()
-
-    return render(request, 'store/login.html', {'form': form})
-
-
-def logout_view(request):
-    logout(request)
-    return redirect('store')  # Logout sonrası store sayfasına yönlendirme
-
-
 # Kelime listesi
 WORDS = ["python", "django", "development", "programming", "project", "template", "variable"]
 
@@ -187,3 +165,63 @@ def word_guess_game(request):
         'attempts': attempts,
         'message': message
     })
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            email_or_username = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            # Kullanıcı adı veya e-posta üzerinden giriş yap
+            user = authenticate(request, username=email_or_username, password=password) or \
+                   authenticate(request, username=User.objects.filter(email=email_or_username).first(),
+                                password=password)
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'You have successfully logged in!')
+                return redirect('store')
+            else:
+                messages.error(request, 'Invalid email or password.')
+        else:
+            messages.error(request, 'Please fill out the form correctly.')
+    else:
+        form = UserLoginForm()
+
+    return render(request, 'store/login.html', {'form': form, 'tab': 'login'})
+
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'You have been logged out.')
+    return redirect('store')
+
+
+from django.utils.crypto import get_random_string  # Rastgele string oluşturmak için
+
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserSignupForm(request.POST)
+        if form.is_valid():
+            # Kullanıcıyı oluştur ve kaydet
+            user = form.save(commit=False)
+
+            # Benzersiz bir username oluştur
+            random_username = get_random_string(10)
+            user.username = random_username
+            user.save()
+
+            # Kullanıcı için bir Customer nesnesi oluştur
+            Customer.objects.create(user=user)
+
+            messages.success(request, 'Signup successful! You can now log in.')
+            return redirect('login')  # Giriş sayfasına yönlendir
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = UserSignupForm()
+
+    return render(request, 'store/login.html', {'form': form, 'tab': 'signup'})

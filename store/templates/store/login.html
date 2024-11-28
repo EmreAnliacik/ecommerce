@@ -8,47 +8,42 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{% static 'css/login.css' %}">
-        <title>Login</title>
+        <title>{% if tab == 'signup' %}Sign Up{% else %}Login{% endif %}</title>
     </head>
     <body>
     <div class="container1">
         <div class="login-container1">
             <h1 class="logo1">Ecom</h1>
             <ul class="tabs1">
-                <li class="tab1 active1" onclick="showTab('login')">Login</li>
-                <li class="tab1" onclick="showTab('signup')">Sign up</li>
+                <li class="tab1 {% if tab == 'login' %}active1{% endif %}" onclick="showTab('login')">Login</li>
+                <li class="tab1 {% if tab == 'signup' %}active1{% endif %}" onclick="showTab('signup')">Sign Up</li>
             </ul>
 
             <!-- Login Form -->
-            <form id="login-form" method="post" class="login-form1">
-                {% if form.non_field_errors %}
-                    <div class="error">{{ form.non_field_errors }}</div>
-                {% endif %}
+            <form id="login-form" method="post" action="{% url 'login' %}" class="login-form1"
+                  {% if tab != 'login' %}style="display: none;"{% endif %}>
                 {% csrf_token %}
+                <!-- Login Input Fields -->
                 <input type="email" name="email" class="form-control1" placeholder="E-mail" required>
                 <input type="password" name="password" class="form-control1" placeholder="Password" required>
                 <button type="submit" class="btn1 btn-primary1">Continue</button>
-                <a href="#" class="forgot-password1">i forgot my password</a>
             </form>
 
             <!-- Sign up Form -->
-            <form id="signup-form" method="post" class="login-form1" style="display: none;">
+            <form id="signup-form" method="post" action="{% url 'signup' %}" class="login-form1"
+                  {% if tab != 'signup' %}style="display: none;"{% endif %}>
                 {% csrf_token %}
-                <input type="text" name="first_name" class="form-control1" placeholder="Name" required>
-                <input type="text" name="last_name" class="form-control1" placeholder="Surname" required>
+                <!-- Signup Input Fields -->
+                <input type="text" name="first_name" class="form-control1" placeholder="First Name" required>
+                <input type="text" name="last_name" class="form-control1" placeholder="Last Name" required>
                 <input type="email" name="email" class="form-control1" placeholder="E-mail" required>
-                <input type="password" name="password" class="form-control1" placeholder="Password" required>
-                <input type="password" name="confirm_password" class="form-control1" placeholder="Password (again)" required>
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" name="newsletter"> I would like to receive newsletters and offers.
-                    </label>
-                </div>
-                <button type="submit" class="btn1 btn-primary1">Sign up</button>
+                <input type="password" name="password1" class="form-control1" placeholder="Password" required>
+                <input type="password" name="password2" class="form-control1" placeholder="Confirm Password" required>
+                <button type="submit" class="btn1 btn-primary1">Sign Up</button>
             </form>
 
             <div class="social-login1">
-                <p>Log in with your google</p>
+                <p>Log in with your Google</p>
                 <div class="social-icons1">
                     <a href="#"><img src="{% static 'images/google-logo.png' %}" alt="Google"></a>
                 </div>
@@ -57,6 +52,7 @@
     </div>
 
     <script>
+        // Tab switching logic
         function showTab(tab) {
             const loginForm = document.getElementById('login-form');
             const signupForm = document.getElementById('signup-form');
@@ -74,6 +70,12 @@
                 tabs[0].classList.remove('active1');
             }
         }
+
+        // Auto-show correct tab on page load based on backend 'tab' variable
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabToShow = "{{ tab|default:'login' }}";
+            showTab(tabToShow);
+        });
     </script>
     </body>
     </html>
