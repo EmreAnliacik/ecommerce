@@ -15,12 +15,12 @@
         <div class="login-container1">
             <h1 class="logo1">Ecom</h1>
             <ul class="tabs1">
-                <li class="tab1 active1">Login</li>
-                <li class="tab1">Sign up</li>
+                <li class="tab1 active1" onclick="showTab('login')">Login</li>
+                <li class="tab1" onclick="showTab('signup')">Sign up</li>
             </ul>
-            <form method="post" class="login-form1">
 
-
+            <!-- Login Form -->
+            <form id="login-form" method="post" class="login-form1">
                 {% if form.non_field_errors %}
                     <div class="error">{{ form.non_field_errors }}</div>
                 {% endif %}
@@ -29,8 +29,24 @@
                 <input type="password" name="password" class="form-control1" placeholder="Password" required>
                 <button type="submit" class="btn1 btn-primary1">Continue</button>
                 <a href="#" class="forgot-password1">i forgot my password</a>
-
             </form>
+
+            <!-- Sign up Form -->
+            <form id="signup-form" method="post" class="login-form1" style="display: none;">
+                {% csrf_token %}
+                <input type="text" name="first_name" class="form-control1" placeholder="Name" required>
+                <input type="text" name="last_name" class="form-control1" placeholder="Surname" required>
+                <input type="email" name="email" class="form-control1" placeholder="E-mail" required>
+                <input type="password" name="password" class="form-control1" placeholder="Password" required>
+                <input type="password" name="confirm_password" class="form-control1" placeholder="Password (again)" required>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" name="newsletter"> I would like to receive newsletters and offers.
+                    </label>
+                </div>
+                <button type="submit" class="btn1 btn-primary1">Sign up</button>
+            </form>
+
             <div class="social-login1">
                 <p>Log in with your google</p>
                 <div class="social-icons1">
@@ -39,6 +55,26 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function showTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const tabs = document.querySelectorAll('.tab1');
+
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                tabs[0].classList.add('active1');
+                tabs[1].classList.remove('active1');
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                tabs[1].classList.add('active1');
+                tabs[0].classList.remove('active1');
+            }
+        }
+    </script>
     </body>
     </html>
 
