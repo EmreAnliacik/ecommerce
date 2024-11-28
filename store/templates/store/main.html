@@ -12,7 +12,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
     <script type="text/javascript">
-        var user= '{{ request.user }}'
+        var user = '{{ request.user }}'
 
         function getToken(name) {
             let cookieValue = null;
@@ -38,12 +38,12 @@
             var cookieArr = document.cookie.split(";");
 
             // Loop through the array elements
-            for(var i = 0; i < cookieArr.length; i++) {
+            for (var i = 0; i < cookieArr.length; i++) {
                 var cookiePair = cookieArr[i].split("=");
 
                 /* Removing whitespace at the beginning of the cookie name
                 and compare it with the given string */
-                if(name == cookiePair[0].trim()) {
+                if (name == cookiePair[0].trim()) {
                     // Decode the cookie value and return
                     return decodeURIComponent(cookiePair[1]);
                 }
@@ -52,12 +52,13 @@
             // Return null if not found
             return null;
         }
+
         var cart = JSON.parse(getCookie('cart'))
 
-        if (cart == undefined){
+        if (cart == undefined) {
             cart = {}
             console.log('Cart Created!', cart)
-            document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+            document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
         }
         console.log('Cart:', cart)
 
@@ -68,7 +69,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-    <img id="main-logo"  src="{% static 'images/main-logo.jpg' %}" href="{% url 'store' %}">
+    <img id="main-logo" src="{% static 'images/main-logo.jpg' %}" href="{% url 'store' %}">
     <a class="navbar-brand">Ecom</a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -89,10 +90,10 @@
         <div class="form-inline my-2 my-lg-0">
             {% if request.user.is_authenticated %}
                 <span class="navbar-text text-white mr-3">
-            Welcome, {{ request.user.username }}
-        </span>
-                <a href="{% url 'logout' %}" class="myButton">Logout</a>
-            {% else %}
+                Welcome {{ request.user.first_name.capitalize }} {{ request.user.last_name.capitalize }}!
+                    </span>
+                    <a href="{% url 'logout' %}" class="myButton">Logout</a>
+                    {% else %}
                 <a href="{% url 'login' %}" class="myButton">Login</a>
             {% endif %}
             <a href="{% url 'cart' %}">

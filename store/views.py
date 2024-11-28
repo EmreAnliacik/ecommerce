@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import UserLoginForm
 from .models import Customer  # Customer modelini ekleyin
+from django.utils.crypto import get_random_string  # Rastgele string oluşturmak için
 
 
 # Create your views here.
@@ -108,7 +109,7 @@ def processOrder(request):
 
     order.save()
 
-    if order.shipping == True:
+    if order.shipping:
         ShippingAddress.objects.create(
             customer=customer,
             order=order,
@@ -197,9 +198,6 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out.')
     return redirect('store')
-
-
-from django.utils.crypto import get_random_string  # Rastgele string oluşturmak için
 
 
 def signup_view(request):
